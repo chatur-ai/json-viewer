@@ -1,12 +1,10 @@
 import { Text } from "grommet"
-import { flatten, keys, map, uniq } from "underscore"
-
-const extractKeys = (datum) => {
-    return keys(datum)
-}
+import { countBy, flatten, keys, map, mapObject, max, object, sortBy, uniq, values } from "underscore"
 
 export const extractColumns = (data) => {
-    const allKeys = uniq(flatten(map(data, extractKeys)))
+    const allKeys = uniq(flatten(map(data, datum => keys(datum))))
+    const keyUsages = object(allKeys, map(allKeys, key => countBy(data, datum => datum[key] ? 'exists' : 'missing')))
+    const maxKeyUsage = max(map(values(keyUsages), usage => usage['exists'] || 0))
     return map(allKeys, function (key) {
         return {
             property: key,
