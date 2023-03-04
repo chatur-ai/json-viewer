@@ -1,24 +1,10 @@
-import logo from './logo.svg';
-import './App.css';
+import { grommet, Grommet } from "grommet";
 
 function App() {
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <Grommet full theme={grommet}>
+      <h1>chatur.ai</h1>
+    </Grommet>
   );
 }
 
