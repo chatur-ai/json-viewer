@@ -1,7 +1,6 @@
-import { Box, Grid, grommet, Grommet, Header, Heading, Tab, Tabs, Text, TextArea, ThemeContext } from "grommet"
+import { Box, Grid, grommet, Grommet, Header, Heading, Text, TextArea } from "grommet"
 import { React, useReducer } from "react"
-import { Fragment } from "react"
-import { renderJsonCards, renderJsonTable } from "./utils"
+import { renderJsonCards } from "./utils"
 
 
 function reducer(state, action) {
@@ -40,14 +39,14 @@ function App() {
   return (
     <Grommet full theme={grommet} background="light-2">
       <Grid
-        rows={['xxsmall', 'flex']}
-        columns={['1/2', 'full']}
+        rows={['xxsmall', 'auto']}
+        columns={['1/2', '1/2']}
         areas={[
           { name: 'header', start: [0, 0], end: [1, 0] },
           { name: 'textView', start: [0, 1], end: [0, 1] },
           { name: 'jsonView', start: [1, 1], end: [1, 1] },
         ]}
-        full
+        fill
       >
         <Header gridArea="header" background="brand" pad="small">
           <Heading size="small">JSON Viewer</Heading>
@@ -56,19 +55,8 @@ function App() {
         <Box gridArea="textView" background="neutral-2" margin="small" round="xsmall">
           <TextArea placeholder="Enter JSON" value={state.textInput} onChange={event => dispatch({ type: "input_text", value: event.target.value })} fill resize={false} size="small" style={{ fontFamily: 'monospace' }} plain />
         </Box>
-        <Box gridArea="jsonView" margin="small" gap="small">
-          <Tabs alignSelf="start">
-            <Tab title="Cards View">
-              <Box>
-                {state.jsonInput && renderJsonCards(state.jsonInput)}
-              </Box>
-            </Tab>
-            <Tab title="Table View">
-              <Box background="white" round="xsmall">
-                {state.jsonInput && renderJsonTable(state.jsonInput)}
-              </Box>
-            </Tab>
-          </Tabs>
+        <Box gridArea="jsonView" margin="small">
+          {state.jsonInput && renderJsonCards(state.jsonInput)}
         </Box>
       </Grid>
     </Grommet >

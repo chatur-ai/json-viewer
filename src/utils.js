@@ -1,5 +1,5 @@
-import { Box, Card, CheckBox, DataTable, List, NameValueList, NameValuePair, Text } from "grommet"
-import { countBy, each, extend, flatten, forEach, isArray, isBoolean, isNumber, isObject, isString, keys, map, mapObject, max, object, sample, sortBy, uniq, values } from "underscore"
+import { Card, CheckBox, DataTable, Grid, NameValueList, NameValuePair, Text } from "grommet"
+import { countBy, extend, flatten, forEach, isArray, isBoolean, isNumber, isString, keys, map, mapObject, max, object, sample, uniq } from "underscore"
 
 const renderString = (datum, key) => <Text>{datum[key]}</Text>
 const renderNumber = (datum, key) => <Text>{datum[key]}</Text>
@@ -11,10 +11,10 @@ export const renderJsonCards = (json, inner) => {
     const data = isArray(json) ? json : [json] // Object >> Array
     const extracted = extractKeyMetadata(data)
     return (
-        <Box direction="row" gap="small">
+        <Grid gap="small" columns="fit">
             {map(data, (datum, index) => {
                 return (
-                    <Card background={inner ? "light-1" : "white"} pad="small" key={index}>
+                    <Card background={inner ? "light-1" : "white"} pad="medium" key={index} >
                         <NameValueList key={index} layout="grid">
                             {map(keys(datum), key => {
                                 return (
@@ -27,7 +27,7 @@ export const renderJsonCards = (json, inner) => {
                     </Card>
                 )
             })}
-        </Box>
+        </Grid>
     )
 }
 
