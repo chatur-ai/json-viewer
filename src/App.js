@@ -1,7 +1,7 @@
-import { Button, Card, CardBody, CardFooter, CardHeader, DataTable, grommet, Grommet, Header, PageHeader, Text, TextArea } from "grommet"
-import { Favorite, ShareOption } from "grommet-icons"
+import { Box, Grid, grommet, Grommet, Header, Heading, Tab, Tabs, Text, TextArea, ThemeContext } from "grommet"
 import { React, useReducer } from "react"
-import { extractColumns } from "./utils"
+import { Fragment } from "react"
+import { renderJsonCards, renderJsonTable } from "./utils"
 
 
 function reducer(state, action) {
@@ -9,13 +9,9 @@ function reducer(state, action) {
     case 'input_text': {
       try {
         const parsedJson = JSON.parse(action.value)
-        const parsedColumns = extractColumns(parsedJson)
         return {
           textInput: action.value,
-          jsonInput: {
-            columns: parsedColumns,
-            data: parsedJson
-          },
+          jsonInput: parsedJson,
           errors: []
         }
       } catch (e) {
@@ -34,29 +30,48 @@ function reducer(state, action) {
 const initialState = {
   textInput: undefined,
   jsonInput: undefined,
+  viewCards: true,
+  viewTable: false,
   errors: []
 }
 
 function App() {
   const [state, dispatch] = useReducer(reducer, initialState)
-  console.log(state)
   return (
-    <Grommet full theme={grommet}>
-      <Header background="brand">
-        <Text>chatur.ai</Text>
-      </Header>
-      <PageHeader title="chatur.ai" subtitle="supercharge your development with AI" actions={<Button label="Try it out" primary />} />
-      <Card background="light-1">
-        <CardHeader pad="medium">Header</CardHeader>
-        <CardBody pad="medium">Body</CardBody>
-        <CardFooter pad="medium" background="light-2">
-          <Button icon={<Favorite color="red" />} hoverIndicator />
-          <Button icon={<ShareOption color="plain" />} hoverIndicator />
-        </CardFooter>
-      </Card>
-      <TextArea placeholder="Enter JSON" value={state.textInput} onChange={event => dispatch({ type: "input_text", value: event.target.value })} />
-      {state.jsonInput && <DataTable columns={state.jsonInput.columns} data={state.jsonInput.data} sortable />}
-    </Grommet>
+    <Grommet full theme={grommet} background="light-2">
+      <Grid
+        rows={['xxsmall', 'flex']}
+        columns={['1/2', 'full']}
+        areas={[
+          { name: 'header', start: [0, 0], end: [1, 0] },
+          { name: 'textView', start: [0, 1], end: [0, 1] },
+          { name: 'jsonView', start: [1, 1], end: [1, 1] },
+        ]}
+        full
+      >
+        <Header gridArea="header" background="brand" pad="small">
+          <Heading size="small">JSON Viewer</Heading>
+          <Text size="xsmall">Made with ❤️ by chatur.ai</Text>
+        </Header>
+        <Box gridArea="textView" background="neutral-2" margin="small" round="xsmall">
+          <TextArea placeholder="Enter JSON" value={state.textInput} onChange={event => dispatch({ type: "input_text", value: event.target.value })} fill resize={false} size="small" style={{ fontFamily: 'monospace' }} plain />
+        </Box>
+        <Box gridArea="jsonView" margin="small" gap="small">
+          <Tabs alignSelf="start">
+            <Tab title="Cards View">
+              <Box>
+                {state.jsonInput && renderJsonCards(state.jsonInput)}
+              </Box>
+            </Tab>
+            <Tab title="Table View">
+              <Box background="white" round="xsmall">
+                {state.jsonInput && renderJsonTable(state.jsonInput)}
+              </Box>
+            </Tab>
+          </Tabs>
+        </Box>
+      </Grid>
+    </Grommet >
   )
 }
 
