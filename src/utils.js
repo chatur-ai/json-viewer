@@ -1,11 +1,16 @@
-import { Card, CheckBox, DataTable, Grid, NameValueList, NameValuePair, Text } from "grommet"
-import { countBy, extend, flatten, forEach, isArray, isBoolean, isNumber, isString, keys, map, mapObject, max, object, sample, uniq } from "underscore"
+import { Card, CheckBox, DataTable, Grid, List, NameValueList, NameValuePair, Text } from "grommet"
+import { countBy, extend, flatten, forEach, isArray, isBoolean, isNumber, isObject, isString, keys, map, mapObject, max, object, sample, uniq } from "underscore"
 
 const renderString = (datum, key) => <Text>{datum[key]}</Text>
 const renderNumber = (datum, key) => <Text>{datum[key]}</Text>
 const renderBoolean = (datum, key) => <CheckBox checked={datum[key]} />
-const renderArray = (datum, key) => renderJsonTable(datum[key])
+const renderList = (datum, key) => <List data={datum[key]} />
 const renderObject = (datum, key) => renderJsonCards(datum[key], true)
+
+const renderArray = (datum, key) => {
+    const sampleDatum = sample(datum[key])
+    return isObject(sampleDatum) ? renderJsonCards(datum[key]) : renderList(datum, key)
+}
 
 export const renderJsonCards = (json, inner) => {
     const data = isArray(json) ? json : [json] // Object >> Array
@@ -14,7 +19,7 @@ export const renderJsonCards = (json, inner) => {
         <Grid gap="small" columns="fit">
             {map(data, (datum, index) => {
                 return (
-                    <Card background={inner ? "light-1" : "white"} pad="medium" key={index} >
+                    <Card background="white" pad="medium" key={index}>
                         <NameValueList key={index} layout="grid">
                             {map(keys(datum), key => {
                                 return (

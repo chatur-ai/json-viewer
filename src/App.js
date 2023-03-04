@@ -9,7 +9,7 @@ function reducer(state, action) {
       try {
         const parsedJson = JSON.parse(action.value)
         return {
-          textInput: action.value,
+          textInput: JSON.stringify(parsedJson, null, 2), // clean up the JSON string
           jsonInput: parsedJson,
           errors: []
         }
